@@ -1,0 +1,92 @@
+a. Knowledge Graph-Driven Test Case Generation for Detecting Hallucinations in Chatbots (2026S1-3405)
+
+Problem restatement: LLMs hallucinate; how can a knowledge graph act as ground truth for validation?
+
+1. Build / use a domain knowledge graph
+Entities + relations (e.g. facts from Wikipedia, medical guidelines, or curated datasets)
+Graph acts as a trusted reference
+
+2. Generate test cases automatically
+Convert graph triples into:
+direct questions
+multi-hop reasoning questions
+paraphrased / adversarial prompts
+
+3. Evaluate hallucinations
+Compare LLM outputs against the graph:
+exact match (facts)
+logical consistency (multi-hop paths)
+Flag:
+fabricated entities
+incorrect relations
+unsupported claims
+
+4. Metrics
+Hallucination rate
+Factual consistency
+Reasoning depth failure cases
+
+Use a public KG (e.g., Wikidata, DBpedia) as “trusted facts.”
+Design a pipeline:
+1 Extract claims from chatbot responses.
+2 Map entities/relations to KG.
+3 Check factual consistency (binary or confidence score).
+4 Generate test cases where KG has known facts vs. LLM output.
+Research question: Can KG coverage impact hallucination detection accuracy?
+Possible tooling: Use LLM APIs for claim extraction, Neo4j/Blazegraph for KG querying.
+
+Step A (Extraction): Select a domain (e.g., Medical or Finance). Use a KG (like Wikidata or a custom Neo4j graph) to extract "triplets": (Subject) --[Relation]--> (Object).
+Step B (Template Generation): Convert triplets into Natural Language questions using an LLM (e.g., "Where was X born?").
+Step C (Validation): Feed the question to the chatbot. Since the KG is the "Ground Truth," if the chatbot’s answer contradicts the KG, you have successfully detected a hallucination.
+Key Talking Point: Mention using Reasoning Paths. If the KG knows $A \to B$ and $B \to C$, you can ask the chatbot about the relationship between $A$ and $C$ to test its multi-hop reasoning.
+
+Why this is interesting
+Scalable
+Repeatable
+More objective than human-only evaluation
+
+-------------------------------
+
+b. Trustworthy Coding Agents (2026S1-3404)
+
+Problem restatement: Code-generating agents can produce unsafe, non-robust, or hard-to-maintain code.
+
+1. Define “trustworthiness”
+Correctness (tests, static analysis)
+Safety (no dangerous patterns, security checks)
+Maintainability (readability, modularity)
+
+2. Agent architecture
+Planning step before coding
+Tool use:
+linters
+static analyzers
+test generators
+Self-verification loop:
+agent critiques its own output
+revises based on failures
+
+3. Evaluation
+Compare:
+vanilla LLM coding
+agent with verification loops
+Measure:
+bug rate
+test pass rate
+code quality metrics
+
+Define “trustworthiness” dimensions: correctness, security, readability, maintainability.
+Build a feedback loop: agent generates code → static analysis tools + linters + test suites evaluate → refine.
+Incorporate “safety constraints” as prompts or post-processing rules.
+Possible testbed: Use existing code benchmarks (HumanEval, SWE-bench) and add safety/security test cases.
+Research angle: Measuring trade-offs between functionality and trustworthiness in agent outputs.
+
+Step A (Static Analysis Integration): Suggest a pipeline where the agent's code must pass Linters (Pylint) and Security Scanners (Bandit/Snyk) before being presented to the user.
+Step B (Property-Based Testing): Instead of just unit tests, use tools like Hypothesis to test edge cases automatically.
+Step C (Human-in-the-loop): Discuss "Explainability"—the agent shouldn't just provide code; it should provide a "proof of correctness" or a summary of potential risks.
+Key Talking Point: Focus on Safety Constraints. How do we prevent an agent from generating code that has SQL injection vulnerabilities or "hallucinated" library dependencies that don't exist?
+
+Why it matters
+Production readiness
+Real developer workflows
+Safety in AI-assisted development
